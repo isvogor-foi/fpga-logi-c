@@ -26,6 +26,8 @@
 #include "logi/jpeg_func.h"
 #include "logilib.h"
 
+#include "/home/ivan/Dev/java/workspace/JNITest/src/Hello.h"
+
 using namespace std;
 
 #define REG_ADDR 0x0800
@@ -38,10 +40,26 @@ using namespace std;
 
 #define FILTER_SIZE 6
 
+
+// prototype methods
 int *filtering_chain_builder(list<Filter*> input_filter);
 void print_array(int *array, int size);
 
+
+JNIEXPORT void JNICALL Java_Hello_sayHi(JNIEnv *env, jobject obj, jstring who, jint times) { 
+	jint i; 
+	jboolean iscopy; 
+	const char *name; 
+	name = env->GetStringUTFChars(who, &iscopy); 
+	for (i = 0; i < times; i++) {
+		cout<<name<<endl;
+	}
+}
+
+// main file
 int main(int argc, char* argv[]){
+
+	cout<<"logi"<<endl;
 
 	if(argc <= 2){
 		cout<<"Missing parameters. Please use the following input notation: "<<endl;
@@ -74,7 +92,8 @@ int main(int argc, char* argv[]){
 
 int logi_call(int argc, char ** argv){
 
-unsigned char * inputImage ;
+	unsigned char * inputImage ;
+
 	long start_time, end_time ;
 	double diff_time ;
 	struct timespec cpu_time ;
@@ -99,6 +118,7 @@ unsigned char * inputImage ;
 	}
 	printf("output file openened \n");
 	printf("loading input file : %s \n", argv[1]);
+
 	res = read_jpeg_file( argv[1], &inputImage);
 	if(res < 0){
 		perror("Error opening input file");

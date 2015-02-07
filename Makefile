@@ -6,15 +6,21 @@
 CC=g++
 
 #Compiler Flags
-CFLAGS = -c
+# -fPIC added for JNI (shared libs like std::)
+CFLAGS = -c -fPIC
 
 #Linker 
 LDFLAGS= -ljpeg -lrt -llogi
 
 all: cfpga
 
+#cfpga (default)
 cfpga: main.o sobel.o gauss.o hyst.o erode.o dilate.o output.o jpeg_func.o
 	$(CC) -o cfpga main.o sobel.o gauss.o hyst.o erode.o dilate.o output.o jpeg_func.o $(LDFLAGS)
+
+#jni
+jni: main.o sobel.o gauss.o hyst.o erode.o dilate.o output.o jpeg_func.o
+	$(CC) -o libHelloImpl.so main.o sobel.o gauss.o hyst.o erode.o dilate.o output.o jpeg_func.o -lc -shared -I/usr/lib/jvm/default-java/include -I/usr/lib/jvm/default-java/include/linux -fPIC
 
 #libs
 
